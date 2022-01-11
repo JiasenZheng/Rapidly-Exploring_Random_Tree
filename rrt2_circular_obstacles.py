@@ -19,12 +19,12 @@ class RRT():
         """
         self.size = 100 # Size of the map
         self.K = 500 # Number of iteration
-        self.delta = 5 # Increment distance
+        self.delta = 3 # Increment distance
         self.q_init = q_init # Initial coordinate of the node
         self.q_final = q_final # Final coordinate of the node
+        self.q_new = self.q_init # Initialize new node
         self.num_circle = num_circle # Number of circles
         self.size_circle = size_circle # Size of circles 
-        self.dis_thresh = 10  # Distance threshold 
         self.generate_circles() # Implement generate circles function
         self.remove_bad_circles() # Implement remove bad circles function
 
@@ -110,6 +110,9 @@ class RRT():
             return False
 
     def check_collision_free_path(self):
+        """
+        To check if there is a collision free path from the new node to the fianl node
+        """
         for c in self.circles:
             edge = [self.q_new, self.q_final]
             if self.check_edge_collision(c,edge):
@@ -151,7 +154,7 @@ class RRT():
         for c in self.circles:
             circle = plt.Circle((c[1],c[2]),c[0],alpha=0.5)
             ax.add_patch(circle)
-        while math.dist(q_current,self.q_final) >= self.dis_thresh:
+        while self.check_collision_free_path() == False:
             i+=1
             ax.set_title("Iterations: "+str(i))
             self.q_rand = self.rand_gen()
@@ -194,5 +197,5 @@ class RRT():
 
 
 if __name__ == "__main__":
-    rrt = RRT(q_init=[10,10],q_final=[80,90],num_circle=20, size_circle=5)
+    rrt = RRT(q_init=[10,10],q_final=[80,90],num_circle=28, size_circle=6)
     rrt.generate_figure()

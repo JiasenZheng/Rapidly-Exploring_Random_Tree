@@ -69,7 +69,8 @@ class RRT():
         else:
             return False
 
-
+    def check_edge_collision(self):
+        pass
     
     def generate_figure(self):
         """

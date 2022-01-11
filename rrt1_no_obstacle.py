@@ -8,18 +8,18 @@ import matplotlib.pyplot as plt
 
 class RRT():
 
-    def __init__(self, q_init, q_final):
+    def __init__(self, q_init, num_iteration):
         """
         Initialization
         Input:
             q_init: desired initial coordinate
-            q_final: desired final coordinate
+            num_iteration: desired number of iterations
         """
         self.size = 100 # Size of the map
         self.K = 500 # Number of iteration
-        self.delta = 2 # Increment distance
+        self.delta = 3 # Increment distance
         self.q_init = q_init # Initial coordinate of the node
-        self.q_final = q_final # Final coordinate of the node 
+        self.num_iteration = num_iteration # Number of iterations
         self.dis_thresh = 4  # Distance threshold 
 
         # Store the path from start to end node
@@ -66,11 +66,10 @@ class RRT():
         plt.ylim(0,100)
         plt.gca().set_aspect('equal', adjustable='box')
         ax.plot(self.q_init[0],self.q_init[1],'*',color = 'blue')
-        ax.plot(self.q_final[0],self.q_final[1],'*',color = 'green')
         q_current = self.q_init
-        while math.dist(q_current,self.q_final) >= self.dis_thresh:
-            i+=1
-            ax.set_title("Iterations: "+str(i))
+
+        for i in range(self.num_iteration):
+            ax.set_title("Iterations: "+str(i+1))
             self.q_rand = self.rand_gen()
             self.q_near = self.nearest_vertex()
             self.q_new = self.new_config()
@@ -82,26 +81,6 @@ class RRT():
             self.fig.canvas.draw()
             plt.pause(0.01)
             q_current = self.q_new
-        
-        self.qs.append(self.q_final)
-        self.qs_parent.append(self.q_new)
-        x_values = [self.q_new[0],self.q_final[0]]
-        y_values = [self.q_new[1],self.q_final[1]]
-        plt.plot(x_values,y_values,color = "black")
-        self.fig.canvas.draw()
-        plt.pause(0.01)
-
-        q_parent = self.qs_parent[-1]
-        q_current = self.qs[-1]
-        while q_parent != [None,None]:
-            x_values = [q_current[0],q_parent[0]]
-            y_values = [q_current[1],q_parent[1]]
-            plt.plot(x_values,y_values,color = "red")
-            self.fig.canvas.draw()
-            plt.pause(0.01)
-            parent_idx = self.qs.index(q_current)
-            q_current = q_parent
-            q_parent = self.qs_parent[parent_idx]
 
         plt.show()
 
@@ -109,5 +88,5 @@ class RRT():
 
 
 if __name__ == "__main__":
-    rrt = RRT(q_init=[10,10],q_final=[80,90])
+    rrt = RRT(q_init=[50,50],num_iteration=100)
     rrt.generate_figure()
