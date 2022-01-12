@@ -20,10 +20,11 @@ class RRT():
         self.size = len(img) # Size of the map
         self.K = 500 # Number of iteration
         self.delta = 5 # Increment distance
-        self.q_init = q_init # Initial coordinate of the node
-        self.q_final = q_final # Final coordinate of the node
+        self.q_init = q_init # Initial coordinate of the initial node
+        self.q_final = q_final # Final coordinate of the final node
+        self.q_new = self.q_init # Initial coordinate of the new node
         self.img = img # PNG image data
-        self.dis_thresh = 10  # Distance threshold 
+        self.num_step = 100 # number of steps used to check edge collision
 
         # Store the path from start to end node
         self.qs = [q_init] # List to store coordinates of each node
@@ -69,9 +70,27 @@ class RRT():
         else:
             return False
 
-    def check_edge_collision(self):
-        pass
-    
+    def check_edge_collision(self,edge):
+        '''
+        To check if the edge collides with the image
+        input:
+            edge: a list contains a strating point and a ending point
+        '''
+        dx = (edge[1][0] - edge[0][0])/self.num_step
+        dy = (edge[1][1] - edge[0][1])/self.num_step
+
+        for i in range(1,self.num_step+1):
+            x = int(edge[0][0] + dx*i)
+            y = int(edge[0][1] + dy*i)
+            if self.check_point_collision([x,y]):
+                return True
+        return False
+        
+    # def check_collision_free_path(self):
+    #     if self.check_edge_collision([self.q_new,self.q_final]) == False:
+    #         return True
+    #     return False
+
     def generate_figure(self):
         """
         To Implement RRT algorithm generate an animated figure
@@ -83,13 +102,13 @@ class RRT():
         ax.plot(self.q_final[0],self.q_final[1],'*',color = 'green')
         q_current = self.q_init
         
-        while math.dist(q_current,self.q_final) >= self.dis_thresh:
+        while self.check_edge_collision([self.q_new,self.q_final]):
             i+=1
             ax.set_title("Iterations: "+str(i))
             self.q_rand = self.rand_gen()
             self.q_near = self.nearest_vertex()
             self.q_new = self.new_config()
-            if self.check_point_collision(self.q_new):
+            if self.check_point_collision(self.q_new) or self.check_edge_collision([self.q_near,self.q_new]):
                 continue
             self.qs.append(self.q_new)
             self.qs_parent.append(self.q_near)
