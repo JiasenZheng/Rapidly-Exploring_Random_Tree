@@ -146,5 +146,5 @@ class RRT():
 
 if __name__ == "__main__":
     img = iio.imread('image/JZ_192*192.png')
-    rrt = RRT(q_init=[50,150],q_final=[175,50],img=img)
+    rrt = RRT(q_init=[60,75],q_final=[135,95],img=img)
     rrt.generate_figure()

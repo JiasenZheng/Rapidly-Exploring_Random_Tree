@@ -88,5 +88,5 @@ class RRT():
 
 
 if __name__ == "__main__":
-    rrt = RRT(q_init=[50,50],num_iteration=100)
+    rrt = RRT(q_init=[50,50],num_iteration=1000)
     rrt.generate_figure()

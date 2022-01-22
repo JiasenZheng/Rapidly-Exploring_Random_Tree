@@ -75,6 +75,9 @@ class RRT():
     def check_point_collision(self,circle,point):
         """
         To check if the point is in the circle
+        Input:
+            circle: a list contains circle radius and coordinates
+            point: a list contains point coordinates 
         """
         circle_center = (circle[1],circle[2])
         circle_rad = circle[0]
@@ -87,6 +90,9 @@ class RRT():
     def check_edge_collision(self,circle,edge):
         """
         To check if the straight line collides with the circle
+        Input: 
+            circle: a list contains circle radius and coordinates
+            edge:  a list contains coordinates of the starting point and ending point
         """
         x0, y0 = circle[1:]
         x1, y1 = edge[0]
@@ -197,5 +203,5 @@ class RRT():
 
 
 if __name__ == "__main__":
-    rrt = RRT(q_init=[10,10],q_final=[80,90],num_circle=28, size_circle=6)
+    rrt = RRT(q_init=[10,10],q_final=[80,90],num_circle=30, size_circle=6)
     rrt.generate_figure()
